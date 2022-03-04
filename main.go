@@ -13,6 +13,8 @@ import (
 	//"strings"
 	"syscall"
 
+	"github.com/amontg/GoSpicyRamen/src/bot"
+	"github.com/amontg/GoSpicyRamen/src/config"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -28,6 +30,18 @@ func init() {
 }
 
 func main() {
+
+	config.Load()
+	bot.Start()
+
+	fmt.Println("Bot is running, exit with CTRL+C")
+	sc := make(chan os.Signal, 1)
+	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt, os.Kill)
+	<-sc
+
+	bot.Stop()
+
+	/* Old code below, GoSpicyRamen's first stages of life :)
 
 	// create a new discord session
 	// err = error type, := is a variable declaration
@@ -60,6 +74,8 @@ func main() {
 
 	// Close session
 	dg.Close()
+
+	*/
 }
 
 // function to be called when a new message is created (thanks, addHandler)
