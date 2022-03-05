@@ -1,7 +1,7 @@
 # GoSpicyRamen
 SpicyRamen... but in GoLang!
 
-[Functions]
+# Functions
 +ping
 - Simple message response.
 +yt <keyword>
