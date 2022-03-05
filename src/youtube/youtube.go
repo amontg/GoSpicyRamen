@@ -59,7 +59,7 @@ type itemsFind struct {
 
 func YtSearch(name string) string {
 
-	//
+	// this line accesses youtube api using our youtube key and searches using our keyword. confirmed working
 	res, err := http.Get(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + name)
 	if err != nil {
 		fmt.Println(http.StatusServiceUnavailable)
@@ -68,12 +68,19 @@ func YtSearch(name string) string {
 
 	var page ytPageSearch
 
-	//
+	// reads the response from line #63 and decodes it onto a struct (ytPageSearch struct in this case)
 	err = json.NewDecoder(res.Body).Decode(&page)
 	if err != nil {
 		fmt.Println(err)
 		return ""
 	}
+
+	// fmt.Print(page) -- gonna change to print in readable format
+	/*
+			the following commented out code prints out the struct nicely
+		s, _ := json.MarshalIndent(page, "", "\t")
+		fmt.Print(string(s))
+	*/
 
 	//
 	res.Body.Close()
@@ -94,6 +101,7 @@ func YtSearch(name string) string {
 }
 
 // func name(para type) (return type, return type)
+// this func will pull up the specific video's page, call using videoId from YtSearch(). not used for now
 func ytFind(videoId string) {
 	res, err := http.Get(youtubeFindEndpoint + config.GetYoutubeKey() + "&id=" + videoId)
 	if err != nil {
