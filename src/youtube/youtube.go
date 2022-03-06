@@ -121,6 +121,7 @@ func YtSearch(query string) *discordgo.MessageSend {
 	//fmt.Println(video.Items[0])
 
 	//fmt.Println(video)
+
 	msg.Embeds = []*discordgo.MessageEmbed{
 		{
 			Title:       video.Items[displayedResult].Snippet.Title,
@@ -144,7 +145,7 @@ func YtSearch(query string) *discordgo.MessageSend {
 						ID:   "949946487335448636",
 					},
 					Style:    discordgo.PrimaryButton,
-					CustomID: "ytPreviousResult",
+					CustomID: "PreviousResult",
 					Disabled: true,
 				},
 				discordgo.Button{
@@ -153,7 +154,7 @@ func YtSearch(query string) *discordgo.MessageSend {
 						ID:   "949946487616462848",
 					},
 					Style:    discordgo.PrimaryButton,
-					CustomID: "ytNextResult",
+					CustomID: "NextResult",
 					Disabled: false,
 				},
 				discordgo.Button{
@@ -162,7 +163,7 @@ func YtSearch(query string) *discordgo.MessageSend {
 						ID:   "949946487410929714",
 					},
 					Style:    discordgo.PrimaryButton,
-					CustomID: "ytShuffle",
+					CustomID: "Shuffle",
 				},
 				discordgo.Button{
 					Emoji: discordgo.ComponentEmoji{
@@ -170,7 +171,7 @@ func YtSearch(query string) *discordgo.MessageSend {
 						ID:   "949946686191587328",
 					},
 					Style:    discordgo.DangerButton,
-					CustomID: "ytDellete",
+					CustomID: "Dellete",
 				},
 			},
 		},
