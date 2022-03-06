@@ -47,7 +47,7 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		//fmt.Println(strings.Join(ytQuery, "%20")) -- youtube search puts a %20 instead of spaces
 		youtube.YtSearch(strings.Join(ytQuery, "%20"), m)
 		// func YtSearch(query string, channelID string)
-		// utils.SendChannelMessage(m.ChannelID, youtube.YtSearch(cmd[1]))
+		utils.SendChannelMessage(m.ChannelID, youtube.YtSearch(cmd[1]))
 	default:
 		return
 	}
