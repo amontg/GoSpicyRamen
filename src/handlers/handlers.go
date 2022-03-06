@@ -9,8 +9,6 @@ import (
 
 	"strings"
 
-	//"fmt"
-
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -18,6 +16,7 @@ func AddHandlers() {
 	// this is used to register handlers for events
 	// context.dg.AddHandler(ReadyHandler)
 	context.Dg.AddHandler(MessageCreateHandler)
+	context.Dg.AddHandler(InteractionCreateHandler)
 
 }
 
@@ -40,15 +39,18 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	switch cmd[0] {
 	case prefix + "ping":
-		utils.SendChannelMessage(m.ChannelID, "Please shut up.")
+		utils.SimpleMessage(m.ChannelID, "Please shut up.")
 	case prefix + "yt":
-		// we want to use everything besides cmd[0] for our search
-		ytQuery := utils.PopDown(cmd)
-		//fmt.Println(strings.Join(ytQuery, "%20")) -- youtube search puts a %20 instead of spaces
-		youtube.YtSearch(strings.Join(ytQuery, "%20"), m)
 		// func YtSearch(query string, channelID string)
-		utils.SendChannelMessage(m.ChannelID, youtube.YtSearch(cmd[1]))
+		ytQuery := utils.PopDown(cmd)
+		utils.ComplexMessage(m.ChannelID, youtube.YtSearch(strings.Join(ytQuery, "%20")))
 	default:
 		return
 	}
+}
+
+func InteractionCreateHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
+
+	// first get the message data
+
 }
