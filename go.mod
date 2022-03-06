@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/TopiSenpai/dgo-paginator v0.0.0-20220306192703-3476c7dbc703 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
 	golang.org/x/sys v0.0.0-20220227234510-4e6760a101f9 // indirect

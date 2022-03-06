@@ -1,3 +1,5 @@
+github.com/TopiSenpai/dgo-paginator v0.0.0-20220306192703-3476c7dbc703 h1:MhjHqR0i0ZTS5OiUssG5jnozp/vItLIJfuA77AcsFbs=
+github.com/TopiSenpai/dgo-paginator v0.0.0-20220306192703-3476c7dbc703/go.mod h1:Ogxz8fQJCHqqwDIJ2sJrX5YR41TR49GjH0j2zrNV7yY=
 github.com/bwmarrin/discordgo v0.24.0 h1:Gw4MYxqHdvhO99A3nXnSLy97z5pmIKHZVJ1JY5ZDPqY=
 github.com/bwmarrin/discordgo v0.24.0/go.mod h1:NJZpH+1AfhIcyQsPeuBKsUtYrRnjkyu0kIVMCHkZtRY=
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
