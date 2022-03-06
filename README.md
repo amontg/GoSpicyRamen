@@ -11,5 +11,5 @@ SpicyRamen... but in GoLang!
 +yt <keyword>
 - Search YT using the keywords.
   
-![image](https://user-images.githubusercontent.com/34374766/156901089-efa18dc4-a066-40a8-acd0-00121f01bf63.png)
+![image](https://user-images.githubusercontent.com/34374766/156921611-e77e2754-9ecc-4512-b161-6fbb75142103.png)
 
