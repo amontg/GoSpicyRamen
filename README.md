@@ -9,7 +9,7 @@ SpicyRamen... but in GoLang!
 
 ---
 +yt <keyword>
-- Search YT using the keywords.
+- Search YT using the keywords. (Buttons in progress)
   
 ![image](https://user-images.githubusercontent.com/34374766/156921611-e77e2754-9ecc-4512-b161-6fbb75142103.png)
 
