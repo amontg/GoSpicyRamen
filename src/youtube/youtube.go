@@ -10,8 +10,12 @@ import (
 	//"os/exec"
 
 	"github.com/amontg/GoSpicyRamen/src/config"
+	"github.com/amontg/GoSpicyRamen/src/context"
+
 	//"github.com/amontg/GoSpicyRamen/src/utils"
-	//"github.com/bwmarrin/discordgo"
+	//embed "github.com/clinet/discordgo-embed"
+	//"github.com/amontg/GoSpicyRamen/src/utils"
+	"github.com/bwmarrin/discordgo"
 )
 
 //	youtubeSearchEndpoint contains YouTube endpoint for searching after a video
@@ -57,13 +61,13 @@ type itemsFind struct {
 	Snippet snippet `json:"snippet"`
 }
 
-func YtSearch(name string) string {
+func YtSearch(query string, m *discordgo.MessageCreate) {
 
 	// this line accesses youtube api using our youtube key and searches using our keyword. confirmed working
-	res, err := http.Get(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + name)
+	res, err := http.Get(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + query)
 	if err != nil {
 		fmt.Println(http.StatusServiceUnavailable)
-		return ""
+		//return ""
 	}
 
 	var page ytPageSearch
@@ -72,7 +76,7 @@ func YtSearch(name string) string {
 	err = json.NewDecoder(res.Body).Decode(&page)
 	if err != nil {
 		fmt.Println(err)
-		return ""
+		//return ""
 	}
 
 	// fmt.Print(page) -- gonna change to print in readable format
@@ -88,16 +92,34 @@ func YtSearch(name string) string {
 	if len(page.Items) < 1 {
 		fmt.Println("No results!")
 		err = errors.New("empty search result")
-		return ""
+		//return ""
 	}
 	//
 
-	videoId := page.Items[0].Id.VideoId
-	videoUrl := ytVideoUrl + videoId
-	return videoUrl
+	//videoId := page.Items[0].Id.VideoId
+	//videoUrl := ytVideoUrl + videoId
 
-	//videoTitle := page.Items[0].Snippet.Title
-	//return videoId, videoTitle, nil
+	//utils.SendChannelMessage(channelID, videoUrl)
+	//return videoUrl
+
+	msg := discordgo.MessageSend{
+		Content: "I'm a filthy test.",
+		Components: []discordgo.MessageComponent{
+			discordgo.Button{
+				Label:    "1",
+				Style:    discordgo.PrimaryButton,
+				Disabled: false,
+			},
+		},
+	}
+
+	test, err := context.Dg.ChannelMessageSendComplex(m.ChannelID, &msg)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(test)
+	fmt.Println("Attempted to search YouTube.")
 }
 
 // func name(para type) (return type, return type)

@@ -12,6 +12,7 @@ type configuration struct {
 	BotPrefix  string
 	BotToken   string
 	YoutubeKey string
+	BotID      string
 }
 
 // config contains needed env variables
@@ -29,9 +30,10 @@ func Load() {
 		BotPrefix:  os.Getenv("BOT_PREFIX"),
 		BotToken:   os.Getenv("BOT_TOKEN"),
 		YoutubeKey: os.Getenv("YOUTUBE_KEY"),
+		BotID:      os.Getenv("BOT_ID"),
 	}
 
-	fmt.Println("Config Check: ", config.BotToken)
+	//fmt.Println("Config Check: ", config.BotToken)
 }
 
 func GetBotPrefix() string {
@@ -45,4 +47,8 @@ func GetBotToken() string {
 
 func GetYoutubeKey() string {
 	return config.YoutubeKey
+}
+
+func GetBotId() string {
+	return config.BotID
 }

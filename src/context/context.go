@@ -3,6 +3,7 @@ package context
 import (
 	"fmt"
 
+	"github.com/amontg/GoSpicyRamen/src/config"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -16,7 +17,10 @@ func Initialize(botToken string) {
 		fmt.Println("Error starting a session: ", err)
 		return
 	}
-	fmt.Println("Init Check: ", botToken)
+	//fmt.Println("Init Check: ", botToken)
+	var inviteLink string = "https://discord.com/api/oauth2/authorize?client_id="
+	botId := config.GetBotId()
+	fmt.Println("Invite me: ", inviteLink, botId, "&permissions=8&scope=bot")
 }
 
 func OpenConnection() {
