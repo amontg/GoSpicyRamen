@@ -4,6 +4,7 @@ import (
 	// "os"
 	"fmt"
 
+	paginator "github.com/TopiSenpai/dgo-paginator"
 	"github.com/amontg/GoSpicyRamen/src/context"
 	"github.com/bwmarrin/discordgo"
 )
@@ -25,6 +26,12 @@ func EmptyComplex() *discordgo.MessageSend {
 	var m *discordgo.MessageSend = new(discordgo.MessageSend)
 
 	m.Content = "Well, uh... There's an error."
+
+	return m
+}
+
+func EmptyPaginator() *paginator.Paginator {
+	var m *paginator.Paginator = new(paginator.Paginator)
 
 	return m
 }

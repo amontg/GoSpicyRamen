@@ -10,10 +10,8 @@ import (
 
 func Start() {
 	context.Initialize(config.GetBotToken())
-	//fmt.Println(config.GetBotToken())
 	handlers.AddHandlers()
 	context.OpenConnection()
-	//youtube.InitializeRoutine()
 
 }
 
