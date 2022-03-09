@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"fmt"
+
 	paginator "github.com/TopiSenpai/dgo-paginator"
 	"github.com/amontg/GoSpicyRamen/src/config"
 	"github.com/amontg/GoSpicyRamen/src/context"
@@ -15,35 +17,27 @@ import (
 
 // written by TopiSenpai
 var manager = paginator.NewManager(paginator.WithButtonsConfig(paginator.ButtonsConfig{
-	First: &paginator.ComponentOptions{
+	First: nil,
+	Back: &paginator.ComponentOptions{
 		Emoji: discordgo.ComponentEmoji{
-			Name: "⏮",
+			Name: "Left Arrow",
+			ID:   "949946487335448636",
 		},
 		Style: discordgo.PrimaryButton,
 	},
-	Back: &paginator.ComponentOptions{
+	Next: &paginator.ComponentOptions{
 		Emoji: discordgo.ComponentEmoji{
-			Name: "◀",
+			Name: "Right Arrow",
+			ID:   "949946487616462848",
 		},
 		Style: discordgo.PrimaryButton,
 	},
 	Stop: &paginator.ComponentOptions{
 		Emoji: discordgo.ComponentEmoji{
-			Name: "🗑",
+			Name: "Trash",
+			ID:   "949946686191587328",
 		},
 		Style: discordgo.DangerButton,
-	},
-	Next: &paginator.ComponentOptions{
-		Emoji: discordgo.ComponentEmoji{
-			Name: "▶",
-		},
-		Style: discordgo.PrimaryButton,
-	},
-	Last: &paginator.ComponentOptions{
-		Emoji: discordgo.ComponentEmoji{
-			Name: "⏩",
-		},
-		Style: discordgo.PrimaryButton,
 	},
 }))
 
@@ -82,15 +76,10 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		// func YtSearch(query string, channelID string)
 		ytQuery := utils.PopDown(cmd)
 
-		// this func will send the message using paginator's CreateMessage()
-		/*
-			err := manager.CreateMessage(context.Dg, m.ChannelID, )
-			if err != nil {
-				fmt.Println(err)
-			}
-		*/
-
-		youtube.YtSearch(strings.Join(ytQuery, "%20"), m)
+		err := manager.CreateMessage(context.Dg, m.ChannelID, youtube.YtSearch(strings.Join(ytQuery, "%20"), m))
+		if err != nil {
+			fmt.Println(err)
+		}
 
 	default:
 		return

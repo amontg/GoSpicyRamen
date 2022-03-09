@@ -42,7 +42,8 @@ type id struct {
 }
 
 type snippet struct {
-	Title     string    `json:"title"`
+	Title string `json:"title"`
+
 	Thumbnail thumbnail `json:"thumbnails"`
 	Desc      string    `json:"channelTitle"`
 }
@@ -70,10 +71,11 @@ type ytPageFind struct {
 
 type itemsFind struct {
 	Snippet snippet `json:"snippet"`
+	URL     string  `json:"id[1]"`
 }
 
 // t for triggering message, s for sending message
-func YtSearch(query string, m *discordgo.MessageCreate) { // *paginator.Paginator
+func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { // *paginator.Paginator
 
 	// this line accesses youtube api using our youtube key and searches using our keyword. confirmed working
 	res, err := http.Get(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + query)
@@ -93,8 +95,10 @@ func YtSearch(query string, m *discordgo.MessageCreate) { // *paginator.Paginato
 	// reads the response, decodes it onto a struct (ytPageSearch struct in this case)
 
 	//the following commented out code prints out the struct nicely
-	s, _ := json.MarshalIndent(page, "", "\t")
-	fmt.Print(string(s))
+	// s, _ := json.MarshalIndent(page, "", "\t")
+	// fmt.Print(string(s))
+
+	res.Body.Close()
 
 	if len(page.Items) < 1 {
 		fmt.Println("No results!")
@@ -104,30 +108,49 @@ func YtSearch(query string, m *discordgo.MessageCreate) { // *paginator.Paginato
 
 	//var embed *discordgo.MessageSend = new(discordgo.MessageSend)
 
-	var msg *paginator.Paginator
+	fmt.Print(page)
 
-	// written by TopiSenpai
-	msg.PageFunc = func(pageIndex int, embed *discordgo.MessageEmbed) {
-		embed.Title = page.Items[pageIndex].Snippet.Title
-		embed.Color = 16777215
-		embed.URL = page.Items[pageIndex].Snippet.Title
-		embed.Description = page.Items[pageIndex].Snippet.Desc
-		embed.Thumbnail = &discordgo.MessageEmbedThumbnail{
-			URL: page.Items[pageIndex].Snippet.Thumbnail.Size.Url,
-		}
+	return &paginator.Paginator{ // sm
+		PageFunc: func(pageIndex int, embed *discordgo.MessageEmbed) {
+			embed.Title = page.Items[pageIndex].Snippet.Title
+			embed.Color = 16777215
+			embed.URL = ytFind(page.Items[pageIndex].Snippet.Thumbnail.Size.Url)
+			embed.Description = page.Items[pageIndex].Snippet.Desc
+			embed.Thumbnail = &discordgo.MessageEmbedThumbnail{ // thumbnail
+				URL: page.Items[pageIndex].Snippet.Thumbnail.Size.Url,
+			} // thumbnail
+		},
+		MaxPages:        len(page.Items),
+		Expiry:          time.Now(),
+		ExpiryLastUsage: true,
+		ID:              m.ID + query,
 	}
-	// ---
+}
 
-	msg.MaxPages = len(page.Items)
-	msg.Expiry = time.Now()
-	msg.ExpiryLastUsage = true
-	msg.ID = m.ID + query
+func ytFind(videoId string) string {
+	res, err := http.Get(youtubeFindEndpoint + config.GetYoutubeKey() + "&id=" + videoId)
+	if err != nil {
+		fmt.Println(http.StatusServiceUnavailable)
+		return ""
+	}
+
+	var page ytPageFind
+
+	err = json.NewDecoder(res.Body).Decode(&page)
+	if err != nil {
+		fmt.Println(err)
+		return ""
+	}
 
 	res.Body.Close()
 
-	fmt.Printf("%+v\n", msg)
+	if len(page.Items) < 1 {
+		fmt.Println("INFO: empty youtube search result")
+		err = errors.New("empty youtube search result")
+		return ""
+	}
 
-	// CreateMessage(*discordgo.Session, channelID string, paginator *Paginator) err
+	videoTitle := ytVideoUrl + page.Items[0].Snippet.Title
 
-	//return msg
+	return videoTitle
 }
