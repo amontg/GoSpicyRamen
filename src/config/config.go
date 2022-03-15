@@ -13,6 +13,10 @@ type configuration struct {
 	BotToken   string
 	YoutubeKey string
 	BotID      string
+	RedSec     string
+	RedID      string
+	RedUN      string
+	RedPW      string
 }
 
 // config contains needed env variables
@@ -31,6 +35,10 @@ func Load() {
 		BotToken:   os.Getenv("BOT_TOKEN"),
 		YoutubeKey: os.Getenv("YOUTUBE_KEY"),
 		BotID:      os.Getenv("BOT_ID"),
+		RedSec:     os.Getenv("REDSEC"),
+		RedID:      os.Getenv("REDID"),
+		RedUN:      os.Getenv("REDUSER"),
+		RedPW:      os.Getenv("REDPASS"),
 	}
 
 	//fmt.Println("Config Check: ", config.BotToken)
@@ -51,4 +59,12 @@ func GetYoutubeKey() string {
 
 func GetBotId() string {
 	return config.BotID
+}
+
+func GetRedId() string {
+	return config.RedID
+}
+
+func GetRedSec() string {
+	return config.RedSec
 }

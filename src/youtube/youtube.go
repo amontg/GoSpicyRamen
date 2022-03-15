@@ -84,6 +84,8 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 		//return utils.EmptyPaginator()
 	}
 
+	res.Header.Set("User-Agent", "I am a project bot: https://github.com/amontg/GoSpicyRamen")
+
 	var page ytPageSearch
 
 	err = json.NewDecoder(res.Body).Decode(&page)

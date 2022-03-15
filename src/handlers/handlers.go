@@ -6,6 +6,8 @@ import (
 	paginator "github.com/TopiSenpai/dgo-paginator"
 	"github.com/amontg/GoSpicyRamen/src/config"
 	"github.com/amontg/GoSpicyRamen/src/context"
+
+	//"github.com/amontg/GoSpicyRamen/src/reddit"
 	"github.com/amontg/GoSpicyRamen/src/utils"
 
 	"github.com/amontg/GoSpicyRamen/src/youtube"
@@ -80,7 +82,10 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if err != nil {
 			fmt.Println(err)
 		}
-
+	case prefix + "reddit":
+		utils.SimpleMessage(m.ChannelID, "https://c.tenor.com/X8q1Q4i3qmwAAAAC/nervous-glance.gif")
+		//rQuery := utils.PopDown(cmd)
+		//reddit.RedditSearch(strings.Join(rQuery, "%20"), m)
 	default:
 		return
 	}
