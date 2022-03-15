@@ -6,6 +6,7 @@ import (
 	paginator "github.com/TopiSenpai/dgo-paginator"
 	"github.com/amontg/GoSpicyRamen/src/config"
 	"github.com/amontg/GoSpicyRamen/src/context"
+	duck "github.com/amontg/GoSpicyRamen/src/duckduckgo"
 
 	//"github.com/amontg/GoSpicyRamen/src/reddit"
 	"github.com/amontg/GoSpicyRamen/src/utils"
@@ -86,6 +87,13 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		utils.SimpleMessage(m.ChannelID, "https://c.tenor.com/X8q1Q4i3qmwAAAAC/nervous-glance.gif")
 		//rQuery := utils.PopDown(cmd)
 		//reddit.RedditSearch(strings.Join(rQuery, "%20"), m)
+	case prefix + "find":
+		fQuery := utils.PopDown(cmd)
+
+		err := manager.CreateMessage(context.Dg, m.ChannelID, duck.SearchThis(strings.Join(fQuery, "%20"), m))
+		if err != nil {
+			fmt.Println(err)
+		}
 	default:
 		return
 	}
