@@ -6,7 +6,8 @@ import (
 	paginator "github.com/TopiSenpai/dgo-paginator"
 	"github.com/amontg/GoSpicyRamen/src/config"
 	"github.com/amontg/GoSpicyRamen/src/context"
-	duck "github.com/amontg/GoSpicyRamen/src/duckduckgo"
+
+	//duck "github.com/amontg/GoSpicyRamen/src/duckduckgo"
 
 	//"github.com/amontg/GoSpicyRamen/src/reddit"
 	"github.com/amontg/GoSpicyRamen/src/utils"
@@ -24,21 +25,21 @@ var manager = paginator.NewManager(paginator.WithButtonsConfig(paginator.Buttons
 	Back: &paginator.ComponentOptions{
 		Emoji: discordgo.ComponentEmoji{
 			Name: "Left Arrow",
-			ID:   "949946487335448636",
+			ID:   "958424605339582584",
 		},
 		Style: discordgo.PrimaryButton,
 	},
 	Next: &paginator.ComponentOptions{
 		Emoji: discordgo.ComponentEmoji{
 			Name: "Right Arrow",
-			ID:   "949946487616462848",
+			ID:   "958424604882386966",
 		},
 		Style: discordgo.PrimaryButton,
 	},
 	Stop: &paginator.ComponentOptions{
 		Emoji: discordgo.ComponentEmoji{
 			Name: "Trash",
-			ID:   "949946686191587328",
+			ID:   "982065746635005982",
 		},
 		Style: discordgo.DangerButton,
 	},
@@ -88,12 +89,12 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		//rQuery := utils.PopDown(cmd)
 		//reddit.RedditSearch(strings.Join(rQuery, "%20"), m)
 	case prefix + "find":
-		fQuery := utils.PopDown(cmd)
+		//fQuery := utils.PopDown(cmd)
 
-		err := manager.CreateMessage(context.Dg, m.ChannelID, duck.SearchThis(strings.Join(fQuery, "%20"), m))
-		if err != nil {
-			fmt.Println(err)
-		}
+		// err := manager.CreateMessage(context.Dg, m.ChannelID, duck.SearchThis(strings.Join(fQuery, "%20")))
+		// if err != nil {
+		// 	fmt.Println(err)
+		// }
 	default:
 		return
 	}

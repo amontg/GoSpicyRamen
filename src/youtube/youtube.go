@@ -146,7 +146,7 @@ func ytFind(videoId string) string {
 
 	res.Body.Close()
 
-	if len(page.Items) < 1 {
+	if len(page.Items) == 0 { // why are you throwing an error on every result?
 		fmt.Println("INFO: empty youtube search result")
 		err = errors.New("empty youtube search result")
 		return ""
