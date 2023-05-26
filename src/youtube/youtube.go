@@ -57,7 +57,7 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 
 	// this line accesses youtube api using our youtube key and searches using our keyword. confirmed working
 	res, err := http.Get(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + query)
-	fmt.Println(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + query)
+	//fmt.Println(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + query)
 	if err != nil {
 		fmt.Println(http.StatusServiceUnavailable)
 		//return utils.EmptyPaginator()
@@ -94,6 +94,11 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 			embed.Image = &discordgo.MessageEmbedImage{ // thumbnail
 				URL: page.Items[pageIndex].Snippet.Thumbnail.Size.Url,
 			} // thumbnail
+			/* For when I can figure out how videos work...
+			embed.Video = &discordgo.MessageEmbedVideo{ // thumbnail
+				URL: embed.URL + ".mp4",
+			}
+			*/
 		},
 		MaxPages:        len(page.Items),
 		Expiry:          time.Now(),

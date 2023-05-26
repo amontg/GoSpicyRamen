@@ -21,30 +21,46 @@ import (
 )
 
 // written by @TopiSenpai
-var manager = paginator.NewManager(paginator.WithButtonsConfig(paginator.ButtonsConfig{
-	First: nil,
-	Back: &paginator.ComponentOptions{
-		Emoji: discordgo.ComponentEmoji{
-			Name: "Left Arrow",
-			ID:   "958424605339582584",
+var manager = paginator.NewManager(
+	paginator.WithButtonsConfig(paginator.ButtonsConfig{
+		Back: &paginator.ComponentOptions{
+			Emoji: discordgo.ComponentEmoji{
+				Name: "Left Arrow",
+				ID:   "958424605339582584",
+			},
+			Style: discordgo.PrimaryButton,
 		},
-		Style: discordgo.PrimaryButton,
-	},
-	Next: &paginator.ComponentOptions{
-		Emoji: discordgo.ComponentEmoji{
-			Name: "Right Arrow",
-			ID:   "958424604882386966",
+		Next: &paginator.ComponentOptions{
+			Emoji: discordgo.ComponentEmoji{
+				Name: "Right Arrow",
+				ID:   "958424604882386966",
+			},
+			Style: discordgo.PrimaryButton,
 		},
-		Style: discordgo.PrimaryButton,
-	},
-	Stop: &paginator.ComponentOptions{
-		Emoji: discordgo.ComponentEmoji{
-			Name: "Trash",
-			ID:   "982065746635005982",
+		Stop: &paginator.ComponentOptions{
+			Emoji: discordgo.ComponentEmoji{
+				Name: "Stop",
+				ID:   "1111762026453278822",
+			},
+			Style: discordgo.DangerButton,
 		},
-		Style: discordgo.DangerButton,
-	},
-}))
+		First: &paginator.ComponentOptions{
+			Emoji: discordgo.ComponentEmoji{
+				Name: "First",
+				ID:   "1111760730606293144",
+			},
+			Style: discordgo.PrimaryButton,
+		},
+		Last: &paginator.ComponentOptions{
+			Emoji: discordgo.ComponentEmoji{
+				Name: "Last",
+				ID:   "1111760732451766272",
+			},
+			Style: discordgo.PrimaryButton,
+		},
+	}),
+	paginator.WithNotYourPaginatorMessage("This paginator is not yours."),
+)
 
 // ---
 
