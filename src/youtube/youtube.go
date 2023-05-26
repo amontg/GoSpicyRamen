@@ -4,6 +4,7 @@ import (
 	//"bytes"
 	"encoding/json"
 	"fmt"
+	"html"
 	"net/http"
 	"time"
 
@@ -18,9 +19,6 @@ import (
 
 // youtubeSearchEndpoint contains YouTube endpoint for searching after a video
 const youtubeSearchEndpoint string = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key="
-
-// youtubeFindEndpoint contains endpoint for finding more details about a video
-const youtubeFindEndpoint string = "https://www.googleapis.com/youtube/v3/videos?part=snippet&key="
 
 const ytVideoUrl string = "https://www.youtube.com/watch?v="
 
@@ -40,10 +38,10 @@ type id struct {
 }
 
 type snippet struct {
-	Title string `json:"title"`
-
+	Title     string    `json:"title"`
+	Author    string    `json:"channelTitle"`
 	Thumbnail thumbnail `json:"thumbnails"`
-	Desc      string    `json:"channelTitle"`
+	Desc      string    `json:"description"`
 }
 
 type size struct {
@@ -52,23 +50,6 @@ type size struct {
 
 type thumbnail struct {
 	Size size `json:"medium"`
-}
-
-type videoResponse struct {
-	Formats []struct {
-		Url string `json:"url"`
-	} `json:"formats"`
-}
-
-// these structs find a video on youtube
-// page.Items[].Snippet.Title
-type ytPageFind struct {
-	Items []itemsFind `json:"items"`
-}
-
-type itemsFind struct {
-	Snippet snippet `json:"snippet"`
-	URL     string  `json:"id[1]"`
 }
 
 // t for triggering message, s for sending message
@@ -94,10 +75,6 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 
 	// reads the response, decodes it onto a struct (ytPageSearch struct in this case)
 
-	//the following commented out code prints out the struct nicely
-	// s, _ := json.MarshalIndent(page, "", "\t")
-	// fmt.Print(string(s))
-
 	res.Body.Close()
 
 	if len(page.Items) < 1 {
@@ -105,17 +82,16 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 		//return ""
 	}
 
-	//var embed *discordgo.MessageSend = new(discordgo.MessageSend)
-
-	//fmt.Print(page)
-
 	return &paginator.Paginator{ // sm
 		PageFunc: func(pageIndex int, embed *discordgo.MessageEmbed) {
-			embed.Title = page.Items[pageIndex].Snippet.Title
+			embed.Title = html.UnescapeString(page.Items[pageIndex].Snippet.Title)
+			embed.Author = &discordgo.MessageEmbedAuthor{
+				Name: page.Items[pageIndex].Snippet.Author,
+			}
 			embed.Color = 16777215
-			embed.URL = ytFind(page.Items[pageIndex].Snippet.Thumbnail.Size.Url)
+			embed.URL = ytVideoUrl + page.Items[pageIndex].Id.VideoId
 			embed.Description = page.Items[pageIndex].Snippet.Desc
-			embed.Thumbnail = &discordgo.MessageEmbedThumbnail{ // thumbnail
+			embed.Image = &discordgo.MessageEmbedImage{ // thumbnail
 				URL: page.Items[pageIndex].Snippet.Thumbnail.Size.Url,
 			} // thumbnail
 		},
@@ -124,34 +100,4 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 		ExpiryLastUsage: true,
 		ID:              m.ID + query,
 	}
-}
-
-func ytFind(videoId string) string {
-	res, err := http.Get(youtubeFindEndpoint + config.GetYoutubeKey() + "&id=" + videoId)
-	//fmt.Println(youtubeFindEndpoint + config.GetYoutubeKey() + "&id=" + videoId)
-	if err != nil {
-		fmt.Println(http.StatusServiceUnavailable)
-		return ""
-	}
-
-	var page = new(ytPageFind)
-
-	err = json.NewDecoder(res.Body).Decode(page)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-
-	defer res.Body.Close()
-
-	//fmt.Println(page)
-	if len(page.Items) == 0 { // why are you throwing an error on every result?
-		fmt.Println("INFO: empty youtube search result")
-
-		return ""
-	}
-
-	videoTitle := ytVideoUrl + page.Items[0].Snippet.Title
-
-	return videoTitle
 }
