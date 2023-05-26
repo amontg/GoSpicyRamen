@@ -10,7 +10,7 @@ import (
 
 	//duck "github.com/amontg/GoSpicyRamen/src/duckduckgo"
 
-	//"github.com/amontg/GoSpicyRamen/src/reddit"
+	"github.com/amontg/GoSpicyRamen/src/reddit"
 	"github.com/amontg/GoSpicyRamen/src/utils"
 
 	"github.com/amontg/GoSpicyRamen/src/youtube"
@@ -102,9 +102,13 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			log.Panic(err)
 		}
 	case prefix + "reddit":
-		utils.SimpleMessage(m.ChannelID, "https://c.tenor.com/X8q1Q4i3qmwAAAAC/nervous-glance.gif")
-		//rQuery := utils.PopDown(cmd)
-		//reddit.RedditSearch(strings.Join(rQuery, "%20"), m)
+		//utils.SimpleMessage(m.ChannelID, "https://c.tenor.com/X8q1Q4i3qmwAAAAC/nervous-glance.gif")
+		rQuery := utils.PopDown(cmd)
+		err := manager.CreateMessage(context.Dg, m.ChannelID, reddit.RedditSearch(strings.Join(rQuery, "%20"), m))
+		if err != nil {
+			fmt.Println(err)
+			log.Panic(err)
+		}
 	case prefix + "find":
 		//fQuery := utils.PopDown(cmd)
 

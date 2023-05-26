@@ -59,8 +59,7 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 	res, err := http.Get(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + query)
 	//fmt.Println(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + query)
 	if err != nil {
-		fmt.Println(http.StatusServiceUnavailable)
-		//return utils.EmptyPaginator()
+		fmt.Println("Error 1:", err)
 	}
 
 	res.Header.Set("User-Agent", "I am a project bot: https://github.com/amontg/GoSpicyRamen")
