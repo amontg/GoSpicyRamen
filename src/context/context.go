@@ -20,7 +20,7 @@ func Initialize(botToken string) {
 	//fmt.Println("Init Check: ", botToken)
 	var inviteLink string = "https://discord.com/api/oauth2/authorize?client_id="
 	botId := config.GetBotId()
-	fmt.Println("Invite me: ", inviteLink, botId, "&permissions=8&scope=bot")
+	fmt.Println("Invite me: " + inviteLink + botId + "&permissions=8&scope=bot")
 }
 
 func OpenConnection() {

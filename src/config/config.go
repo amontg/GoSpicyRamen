@@ -33,19 +33,21 @@ func Load() {
 	config = &configuration{
 		BotPrefix:  os.Getenv("BOT_PREFIX"),
 		BotToken:   os.Getenv("BOT_TOKEN"),
-		YoutubeKey: os.Getenv("YOUTUBE_KEY"),
 		BotID:      os.Getenv("BOT_ID"),
-		RedSec:     os.Getenv("REDSEC"),
-		RedID:      os.Getenv("REDID"),
-		RedUN:      os.Getenv("REDUSER"),
-		RedPW:      os.Getenv("REDPASS"),
+		YoutubeKey: os.Getenv("YOUTUBE_KEY"),
+		/*
+			RedSec:     os.Getenv("REDSEC"),
+			RedID:      os.Getenv("REDID"),
+			RedUN:      os.Getenv("REDUSER"),
+			RedPW:      os.Getenv("REDPASS"),
+		*/
 	}
 
 	//fmt.Println("Config Check: ", config.BotToken)
 }
 
 func GetBotPrefix() string {
-	//fmt.Println(config.BotPrefix)
+	//fmt.Println(config.BotPrefix + "test")
 	return config.BotPrefix
 }
 

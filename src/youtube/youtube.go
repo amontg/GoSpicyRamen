@@ -3,7 +3,6 @@ package youtube
 import (
 	//"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"time"
@@ -17,13 +16,12 @@ import (
 	paginator "github.com/TopiSenpai/dgo-paginator"
 )
 
-//	youtubeSearchEndpoint contains YouTube endpoint for searching after a video
+// youtubeSearchEndpoint contains YouTube endpoint for searching after a video
 const youtubeSearchEndpoint string = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&key="
 
-//	youtubeFindEndpoint contains endpoint for finding more details about a video
+// youtubeFindEndpoint contains endpoint for finding more details about a video
 const youtubeFindEndpoint string = "https://www.googleapis.com/youtube/v3/videos?part=snippet&key="
 
-//
 const ytVideoUrl string = "https://www.youtube.com/watch?v="
 
 // these structs are for doing a Youtube search
@@ -64,7 +62,6 @@ type videoResponse struct {
 
 // these structs find a video on youtube
 // page.Items[].Snippet.Title
-//
 type ytPageFind struct {
 	Items []itemsFind `json:"items"`
 }
@@ -79,6 +76,7 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 
 	// this line accesses youtube api using our youtube key and searches using our keyword. confirmed working
 	res, err := http.Get(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + query)
+	fmt.Println(youtubeSearchEndpoint + config.GetYoutubeKey() + "&q=" + query)
 	if err != nil {
 		fmt.Println(http.StatusServiceUnavailable)
 		//return utils.EmptyPaginator()
@@ -104,13 +102,12 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 
 	if len(page.Items) < 1 {
 		fmt.Println("No results!")
-		err = errors.New("empty search result")
 		//return ""
 	}
 
 	//var embed *discordgo.MessageSend = new(discordgo.MessageSend)
 
-	fmt.Print(page)
+	//fmt.Print(page)
 
 	return &paginator.Paginator{ // sm
 		PageFunc: func(pageIndex int, embed *discordgo.MessageEmbed) {
@@ -131,24 +128,26 @@ func YtSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator { /
 
 func ytFind(videoId string) string {
 	res, err := http.Get(youtubeFindEndpoint + config.GetYoutubeKey() + "&id=" + videoId)
+	//fmt.Println(youtubeFindEndpoint + config.GetYoutubeKey() + "&id=" + videoId)
 	if err != nil {
 		fmt.Println(http.StatusServiceUnavailable)
 		return ""
 	}
 
-	var page ytPageFind
+	var page = new(ytPageFind)
 
-	err = json.NewDecoder(res.Body).Decode(&page)
+	err = json.NewDecoder(res.Body).Decode(page)
 	if err != nil {
 		fmt.Println(err)
 		return ""
 	}
 
-	res.Body.Close()
+	defer res.Body.Close()
 
+	//fmt.Println(page)
 	if len(page.Items) == 0 { // why are you throwing an error on every result?
 		fmt.Println("INFO: empty youtube search result")
-		err = errors.New("empty youtube search result")
+
 		return ""
 	}
 

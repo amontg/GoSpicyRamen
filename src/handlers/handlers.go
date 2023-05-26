@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 
 	paginator "github.com/TopiSenpai/dgo-paginator"
 	"github.com/amontg/GoSpicyRamen/src/config"
@@ -19,7 +20,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 )
 
-// written by TopiSenpai
+// written by @TopiSenpai
 var manager = paginator.NewManager(paginator.WithButtonsConfig(paginator.ButtonsConfig{
 	First: nil,
 	Back: &paginator.ComponentOptions{
@@ -63,7 +64,6 @@ func ReadyHandler(s *discordgo.Session, event *discordgo.GuildCreate) {
 }
 
 func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
-
 	// prevent bot from answering itself
 	if m.Author.ID == s.State.User.ID {
 		return
@@ -83,6 +83,7 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		err := manager.CreateMessage(context.Dg, m.ChannelID, youtube.YtSearch(strings.Join(ytQuery, "%20"), m))
 		if err != nil {
 			fmt.Println(err)
+			log.Panic(err)
 		}
 	case prefix + "reddit":
 		utils.SimpleMessage(m.ChannelID, "https://c.tenor.com/X8q1Q4i3qmwAAAAC/nervous-glance.gif")
