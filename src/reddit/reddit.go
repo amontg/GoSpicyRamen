@@ -9,6 +9,7 @@ import (
 	"time"
 
 	paginator "github.com/TopiSenpai/dgo-paginator"
+	"github.com/amontg/GoSpicyRamen/src/utils"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -50,50 +51,54 @@ func RedditSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator
 		fmt.Println("Error: ", err)
 	}
 
-	result := &paginator.Paginator{ // sm
+	if len(page.Data.Children) <= 0 {
+		utils.SimpleMessage(m.ChannelID, "I found no results.")
+		return nil
+	}
+
+	return &paginator.Paginator{ // sm
 		PageFunc: func(pageIndex int, embed *discordgo.MessageEmbed) {
-			embed.Title = html.UnescapeString(page.Data.Children[pageIndex].Data.Title)
+			embed.Title = CheckSize(html.UnescapeString(page.Data.Children[pageIndex].Data.Title), 250)
 			embed.Author = &discordgo.MessageEmbedAuthor{
 				Name: page.Data.Children[pageIndex].Data.Author,
 			}
 			embed.Color = 16777215
 			embed.URL = redditLink + page.Data.Children[pageIndex].Data.Permalink
-			embed.Description = page.Data.Children[pageIndex].Data.Selftext
-			embed.Thumbnail = &discordgo.MessageEmbedThumbnail{
+			embed.Description = CheckSize(page.Data.Children[pageIndex].Data.Selftext, 4096)
+			embed.Image = &discordgo.MessageEmbedImage{
 				URL: CheckURL(page.Data.Children[pageIndex].Data.Thumbnail),
 			}
 		},
-		MaxPages:        page.Data.Amount,
+		MaxPages:        len(page.Data.Children),
 		Expiry:          time.Now(),
 		ExpiryLastUsage: true,
 		ID:              m.ID + query,
 	}
-
-	return result
 }
 
 func CheckSize(s string, num int) string {
 	if strings.Count(s, "")-1 > num {
-		s = utils.truncate(s, num-3)
+		s = utils.Truncate(s, num-3)
 	}
 
 	return s
 }
 
 func CheckURL(s string) string {
-	if strings.Contains(s, "https://") {
-		return ToGIF(s)
-	} else if strings.Contains(s, "http://") {
-		return ToGIF(s)
+	if strings.Contains(s, "https://") || strings.Contains(s, "http://") {
+		if strings.Contains(s, ".gifv") {
+			return ToGIF(s)
+		} else if strings.Contains(s, ".jpg") || strings.Contains(s, ".jpeg") || strings.Contains(s, ".png") {
+			fmt.Println(s)
+			return s
+		}
 	}
 
 	return ""
 }
 
 func ToGIF(s string) string {
-	if strings.Contains(s, ".gifv") {
-		strings.Replace(s, ".gifv", ".gif", 1)
-	}
-
+	s = strings.Replace(s, ".gifv", ".gif", 1)
+	fmt.Println(s)
 	return s
 }

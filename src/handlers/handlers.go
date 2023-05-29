@@ -104,10 +104,13 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	case prefix + "reddit":
 		//utils.SimpleMessage(m.ChannelID, "https://c.tenor.com/X8q1Q4i3qmwAAAAC/nervous-glance.gif")
 		rQuery := utils.PopDown(cmd)
-		err := manager.CreateMessage(context.Dg, m.ChannelID, reddit.RedditSearch(strings.Join(rQuery, "%20"), m))
-		if err != nil {
-			fmt.Println(err)
-			log.Panic(err)
+		result := reddit.RedditSearch(strings.Join(rQuery, "%20"), m)
+		if result != nil {
+			err := manager.CreateMessage(context.Dg, m.ChannelID, result)
+			if err != nil {
+				fmt.Println(err)
+				log.Panic(err)
+			}
 		}
 	case prefix + "find":
 		//fQuery := utils.PopDown(cmd)
