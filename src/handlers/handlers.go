@@ -68,15 +68,12 @@ var manager = paginator.NewManager(
 func AddHandlers() {
 	// this is used to register handlers for events
 	// context.dg.AddHandler(ReadyHandler)
+	context.Dg.AddHandler(manager.OnInteractionCreate)
 	context.Dg.AddHandler(MessageCreateHandler)
-	context.Dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
-		utils.SimpleMessage(i.ChannelID, "I see an interaction!")
-		fmt.Println(i)
-		if i.Type != discordgo.InteractionApplicationCommand {
-			return
-		}
-	})
 }
+
+// Create(From)Interaction: The response based on an interaction
+// OnInteractionCreate: Event handler
 
 func ReadyHandler(s *discordgo.Session, event *discordgo.GuildCreate) {
 
@@ -93,23 +90,21 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	prefix := config.GetBotPrefix()
 	// split up the given command
 	cmd := strings.Split(m.Content, " ")
+	query := strings.Join(utils.PopDown(cmd), "%20")
 
 	switch cmd[0] {
 	case prefix + "ping":
 		utils.SimpleMessage(m.ChannelID, "Please shut up.")
 	case prefix + "yt":
-		// func YtSearch(query string, channelID string)
-		ytQuery := utils.PopDown(cmd)
-
-		err := manager.CreateMessage(context.Dg, m.ChannelID, youtube.YtSearch(strings.Join(ytQuery, "%20"), m))
+		result := youtube.YtSearch(query, m)
+		err := manager.CreateMessage(context.Dg, m.ChannelID, result)
 		if err != nil {
 			fmt.Println(err)
 			log.Panic(err)
 		}
 	case prefix + "reddit":
 		//utils.SimpleMessage(m.ChannelID, "https://c.tenor.com/X8q1Q4i3qmwAAAAC/nervous-glance.gif")
-		rQuery := utils.PopDown(cmd)
-		result := reddit.RedditSearch(strings.Join(rQuery, "%20"), m)
+		result := reddit.RedditSearch(query, m)
 		if result != nil {
 			err := manager.CreateMessage(context.Dg, m.ChannelID, result)
 			if err != nil {
@@ -118,8 +113,7 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 			}
 		}
 	case prefix + "ud":
-		udQuery := utils.PopDown(cmd)
-		result := urbandictionary.UrbanDictSearch(strings.Join(udQuery, "%20"), m)
+		result := urbandictionary.UrbanDictSearch(query, m)
 		if result != nil {
 			err := manager.CreateMessage(context.Dg, m.ChannelID, result)
 			if err != nil {
