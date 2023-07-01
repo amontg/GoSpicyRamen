@@ -11,6 +11,7 @@ import (
 	//duck "github.com/amontg/GoSpicyRamen/src/duckduckgo"
 
 	"github.com/amontg/GoSpicyRamen/src/reddit"
+	"github.com/amontg/GoSpicyRamen/src/urbandictionary"
 	"github.com/amontg/GoSpicyRamen/src/utils"
 
 	"github.com/amontg/GoSpicyRamen/src/youtube"
@@ -68,9 +69,13 @@ func AddHandlers() {
 	// this is used to register handlers for events
 	// context.dg.AddHandler(ReadyHandler)
 	context.Dg.AddHandler(MessageCreateHandler)
-	//context.Dg.AddHandler(InteractionCreateHandler)
-
-	context.Dg.AddHandler(manager.OnInteractionCreate)
+	context.Dg.AddHandler(func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+		utils.SimpleMessage(i.ChannelID, "I see an interaction!")
+		fmt.Println(i)
+		if i.Type != discordgo.InteractionApplicationCommand {
+			return
+		}
+	})
 }
 
 func ReadyHandler(s *discordgo.Session, event *discordgo.GuildCreate) {
@@ -112,6 +117,16 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 				log.Panic(err)
 			}
 		}
+	case prefix + "ud":
+		udQuery := utils.PopDown(cmd)
+		result := urbandictionary.UrbanDictSearch(strings.Join(udQuery, "%20"), m)
+		if result != nil {
+			err := manager.CreateMessage(context.Dg, m.ChannelID, result)
+			if err != nil {
+				fmt.Println(err)
+				log.Panic(err)
+			}
+		}
 	case prefix + "find":
 		//fQuery := utils.PopDown(cmd)
 
@@ -122,10 +137,4 @@ func MessageCreateHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	default:
 		return
 	}
-}
-
-func InteractionCreateHandler(s *discordgo.Session, i *discordgo.InteractionCreate) {
-
-	// first get the message data
-
 }

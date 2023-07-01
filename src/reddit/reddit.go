@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -47,8 +48,9 @@ func RedditSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator
 
 	err = json.NewDecoder(res.Body).Decode(&page)
 	defer res.Body.Close()
+
 	if err != nil {
-		fmt.Println("Error: ", err)
+		log.Panic(err)
 	}
 
 	if len(page.Data.Children) <= 0 {
@@ -60,11 +62,11 @@ func RedditSearch(query string, m *discordgo.MessageCreate) *paginator.Paginator
 		PageFunc: func(pageIndex int, embed *discordgo.MessageEmbed) {
 			embed.Title = CheckSize(html.UnescapeString(page.Data.Children[pageIndex].Data.Title), 250)
 			embed.Author = &discordgo.MessageEmbedAuthor{
-				Name: page.Data.Children[pageIndex].Data.Author,
+				Name: page.Data.Children[pageIndex].Data.Author + " in " + page.Data.Children[pageIndex].Data.SubredditNamePrefixed,
 			}
 			embed.Color = 16777215
 			embed.URL = redditLink + page.Data.Children[pageIndex].Data.Permalink
-			embed.Description = CheckSize(page.Data.Children[pageIndex].Data.Selftext, 4096)
+			embed.Description = CheckSize(html.UnescapeString(page.Data.Children[pageIndex].Data.Selftext), 4096)
 			embed.Image = &discordgo.MessageEmbedImage{
 				URL: CheckURL(page.Data.Children[pageIndex].Data.Thumbnail),
 			}

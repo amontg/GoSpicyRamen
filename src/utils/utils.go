@@ -3,6 +3,7 @@ package utils
 import (
 	// "os"
 	"fmt"
+	"strings"
 
 	paginator "github.com/TopiSenpai/dgo-paginator"
 	"github.com/amontg/GoSpicyRamen/src/context"
@@ -62,4 +63,12 @@ func Truncate(str string, length int) (truncated string) {
 	}
 
 	return
+}
+
+func CheckSize(s string, num int) string {
+	if strings.Count(s, "")-1 > num {
+		s = Truncate(s, num-3)
+	}
+
+	return s
 }
