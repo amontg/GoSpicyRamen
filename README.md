@@ -1,5 +1,5 @@
 # GoSpicyRamen
-SpicyRamen... but in GoLang!
+The SpicyRamen bot, remade and expanded in Go.
 
 # Functions
 !ping
